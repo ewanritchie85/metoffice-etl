@@ -1,5 +1,5 @@
 from api.api import get_forecast_data
-import boto3
+
 
 
 def get_data_from_api(span: str, city: str):
@@ -13,6 +13,7 @@ def get_data_from_api(span: str, city: str):
     Returns:
         dict: The JSON response from the API.
     """
+    print('getting_data_from_api called')
     return get_forecast_data(span, city)
 
 

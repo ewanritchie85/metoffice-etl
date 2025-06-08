@@ -23,7 +23,7 @@ ACTIVATE_ENV := source venv/bin/activate
 
 # Execute python related functionalities from within the project's environment
 define execute_in_env
-	$(ACTIVATE_ENV) && $1
+	$(ACTIVATE_ENV) && PYTHONPATH=$(PYTHONPATH) $1
 endef
 
 requirements: create-environment ## Build the environment requirements
