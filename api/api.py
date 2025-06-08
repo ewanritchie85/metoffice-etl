@@ -1,8 +1,8 @@
+import os
 from fastapi import FastAPI
 from dotenv import load_dotenv
-import os
-import json
 import requests
+from utils.utils import get_lat_long_from_city
 
 load_dotenv()
 API_KEY = os.getenv("METOFFICE_API_KEY")
@@ -21,8 +21,9 @@ async def health_check():
 
 
 @app.get("/sitespecific/v0/point/{span}")
-async def get_hourly_data(span: str, latitude: float, longitude: float):
-
+async def get_hourly_data(span: str, city: str):
+    lat_long = get_lat_long_from_city(city)
+    latitude, longitude = lat_long[0], lat_long[1]
     url = f"https://data.hub.api.metoffice.gov.uk/sitespecific/v0/point/{span}"
     headers = {"accept": "application/json", "apikey": API_KEY}
     params = {

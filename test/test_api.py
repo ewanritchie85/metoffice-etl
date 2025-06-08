@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 import pytest
 from api.api import app
+from utils.utils import get_lat_long_from_city
 
 
 @pytest.fixture
@@ -10,11 +11,10 @@ def client():
 
 @pytest.fixture
 def test_response(client):
-    test_latitude = 57.149651
-    test_longitude = -2.099075
+    test_city = "Tokyo"
     test_span = "daily"
     test_response = client.get(
-        f"/sitespecific/v0/point/{test_span}?latitude={test_latitude}&longitude={test_longitude}"
+        f"/sitespecific/v0/point/{test_span}?city={test_city}",
     )
     return test_response
 
