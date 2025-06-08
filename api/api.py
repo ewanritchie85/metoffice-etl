@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
-from pprint import pprint
 import os
 import requests
 
@@ -20,10 +19,10 @@ async def health_check():
     return {"status": "ok"}
 
 
-@app.get("/sitespecific/v0/point/hourly")
-async def get_hourly_data(latitude: float, longitude: float):
+@app.get("/sitespecific/v0/point/{span}")
+async def get_hourly_data(span: str, latitude: float, longitude: float):
 
-    url = "https://data.hub.api.metoffice.gov.uk/sitespecific/v0/point/hourly"
+    url = f"https://data.hub.api.metoffice.gov.uk/sitespecific/v0/point/{span}"
     headers = {"accept": "application/json", "apikey": API_KEY}
     params = {
         "latitude": latitude,
@@ -32,7 +31,4 @@ async def get_hourly_data(latitude: float, longitude: float):
 
     response = requests.get(url, headers=headers, params=params, timeout=30)
     response.raise_for_status()
-
-    
-    pprint(response.json())
     return response.json()
