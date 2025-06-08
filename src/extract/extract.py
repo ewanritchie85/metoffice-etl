@@ -3,6 +3,7 @@ import json
 import boto3
 import logging
 import os
+import dotenv
 from api.api import get_forecast_data
 
 # Configure logging
@@ -12,6 +13,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Load environment variables from .env file
+dotenv.load_dotenv()
 
 def get_data_from_api(span: str, city: str) -> dict:
     """
@@ -40,11 +43,12 @@ def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None)
     Returns:
         str: _description_
     """
-    logger.info(f"uploading forecast data for {city} with span {span} to S3 bucket {bucket}")
     if not s3_client:
         s3_client = boto3.client("s3")
     if not bucket:
         bucket = os.getenv("LANDING_BUCKET_NAME")
+    logger.info(f"uploading forecast data for {city} with span {span} to S3 bucket {bucket}")
+    
 
     date = datetime.now()
     date_str = date.strftime("%Y/%m/%d/%H-%M")
@@ -60,3 +64,6 @@ def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None)
         Bucket=bucket, Key=f"{city}/{date_str}.json", Body=json.dumps(forecast_data)
     )
     return f"{city}/{date_str}.json"
+
+if __name__ == "__main__":
+    upload_json_to_landing_s3("daily", "Tokyo")
