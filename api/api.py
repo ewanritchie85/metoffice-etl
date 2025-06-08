@@ -24,13 +24,15 @@ async def health_check():
 async def get_hourly_data(latitude: float, longitude: float):
 
     url = "https://data.hub.api.metoffice.gov.uk/sitespecific/v0/point/hourly"
-    headers = {"accept": "application/json", "apikey": os.getenv("METOFFICE_API_KEY")}
+    headers = {"accept": "application/json", "apikey": API_KEY}
     params = {
         "latitude": latitude,
         "longitude": longitude,
     }
 
-    response = requests.get(url, headers=headers, params=params)
+    response = requests.get(url, headers=headers, params=params, timeout=30)
     response.raise_for_status()
+
+    
     pprint(response.json())
     return response.json()

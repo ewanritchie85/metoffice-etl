@@ -7,13 +7,14 @@ from api.api import app
 def client():
     return TestClient(app)
 
+
 @pytest.fixture
 def test_response(client):
     test_latitude = 57.149651
     test_longitude = -2.099075
     test_response = client.get(
-            f"/sitespecific/v0/point/hourly?latitude={test_latitude}&longitude={test_longitude}"
-        )
+        f"/sitespecific/v0/point/hourly?latitude={test_latitude}&longitude={test_longitude}"
+    )
     return test_response
 
 
@@ -30,3 +31,4 @@ class TestGetHourlyData:
 
         assert test_response.status_code == 200
         assert test_response.headers["Content-Type"] == "application/json"
+        assert "features" in test_response.json()
