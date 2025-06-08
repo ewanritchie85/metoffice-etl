@@ -24,7 +24,7 @@ class TestHealthCheck:
 
 
 class TestGetHourlyData:
-    def test_get_hourly_data(self, client, mock_data):
+    def test_get_forecast_data(self, client, mock_data):
 
         with patch("api.api.requests.get") as mock_get:
             mock_get.return_value.status_code = 200
