@@ -51,7 +51,7 @@ dev-setup: bandit safety black coverage ## Install Bandit, Black Coverage and Sa
 # Build / Run
 
 run-black: ## Run black to carry out PEP8  formatting
-	$(call execute_in_env, black  ./src/*.py ./tests/*.py)
+	$(call execute_in_env, black  ./src/*/*.py ./tests/*.py)
 
 unit-test: ## Run unit tests using pytest
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest)
