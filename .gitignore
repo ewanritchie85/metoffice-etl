@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Local virtual environments
+venv/
+.env/
+env/
+ENV/
+.venv/
+
+
+# VS Code settings
+.vscode/
+
+# Mac system files
+.DS_Store
