@@ -12,7 +12,7 @@ def client():
 def test_response(client):
     test_latitude = 57.149651
     test_longitude = -2.099075
-    test_span = "hourly"
+    test_span = "daily"
     test_response = client.get(
         f"/sitespecific/v0/point/{test_span}?latitude={test_latitude}&longitude={test_longitude}"
     )
