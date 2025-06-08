@@ -23,3 +23,33 @@ ENV/
 .DS_Store
 
 requirements.txt
+
+# Local .terraform directories
+**/.terraform/*
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Terraform backend config
+terraform/backend.hcl
+
+# Crash log files
+crash.log
+
+# Terraform variable files
+*.tfvars
+*.tfvars.json
+
+# Override files (often used locally)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform plan files
+*.tfplan
+
+# Sensitive config files
+.terraformrc
+terraform.rc

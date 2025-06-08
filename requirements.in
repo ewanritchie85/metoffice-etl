@@ -1,10 +1,20 @@
-pytest
 
+# for unit testing
+pytest
 pytest-cov
 
+# for environment variable management
 python-dotenv
 
+
+# for making API calls
 fastapi
 uvicorn
 
-unittest 
+
+# for AWS interactions
+boto3
+botocore
+
+# for data manipulation
+pandas
