@@ -3,3 +3,7 @@ pytest
 pytest-cov
 
 python-dotenv
+
+fastapi
+uvicorn
+
