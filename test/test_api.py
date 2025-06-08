@@ -1,7 +1,7 @@
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 import pytest
 from api.api import app
-from utils.utils import get_lat_long_from_city
 
 
 @pytest.fixture
@@ -10,13 +10,9 @@ def client():
 
 
 @pytest.fixture
-def test_response(client):
-    test_city = "Tokyo"
-    test_span = "daily"
-    test_response = client.get(
-        f"/sitespecific/v0/point/{test_span}?city={test_city}",
-    )
-    return test_response
+def mock_data():
+    mock_data = {"features": [{"type": "Feature", "properties": {"key": "value"}}]}
+    return mock_data
 
 
 class TestHealthCheck:
@@ -28,8 +24,15 @@ class TestHealthCheck:
 
 
 class TestGetHourlyData:
-    def test_get_hourly_data(self, test_response):
+    def test_get_hourly_data(self, client, mock_data):
 
-        assert test_response.status_code == 200
-        assert test_response.headers["Content-Type"] == "application/json"
-        assert "features" in test_response.json()
+        with patch("api.api.requests.get") as mock_get:
+            mock_get.return_value.status_code = 200
+            mock_get.return_value.json.return_value = mock_data
+            mock_get.return_value.headers = {"Content-Type": "application/json"}
+
+            response = client.get("/sitespecific/v0/point/daily?city=Tokyo")
+
+            assert response.status_code == 200
+            assert response.headers["Content-Type"] == "application/json"
+            assert "features" in response.json()
