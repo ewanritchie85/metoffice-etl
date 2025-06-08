@@ -20,3 +20,5 @@ ENV/
 
 # Mac system files
 .DS_Store
+
+requirements.txt
