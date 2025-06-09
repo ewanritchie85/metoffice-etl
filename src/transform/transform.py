@@ -1,34 +1,32 @@
 from pprint import pprint
-import logging
 import json
 import dotenv
 import pandas as pd
-from utils.utils import get_s3_client_and_bucket
+from utils.utils import get_s3_client_and_landing_bucket, select_wanted_columns, setup_logger
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-logger = logging.getLogger(__name__)
-# Load environment variables from .env file
+logger = setup_logger(__name__)
+
 dotenv.load_dotenv()
 
-
-# json arg to be added in due course
 def transform_data_to_dataframe(bucket=None, s3_client=None) -> pd.DataFrame:
 
-    s3_client, bucket = get_s3_client_and_bucket(bucket, s3_client)
+    logger.info(f"Initialising s3 client")
+    s3_client, bucket = get_s3_client_and_landing_bucket(bucket, s3_client)
+
+    # This assumes you have only one object or have logic elsewhere to select the desired one
+    # Here you list and get the first object for demonstration
+    key = s3_client.list_objects_v2(Bucket=bucket)["Contents"][0]["Key"]
+    city = key.split("/")[-1].replace(".json", "")
     
-    key = "2025/06/09/11/London.json"
-      
-    response = s3_client.get_object(
-        Bucket=bucket,
-        Key=key
-            )
+    logger.info(f"Fetching S3 object: {key}")
+    response = s3_client.get_object(Bucket=bucket, Key=key)
+    
+    logger.info(f"Reading {key}")
     json_data = json.loads(response["Body"].read().decode("utf-8"))
 
-    city = "london"
+    
+
     forecast = json_data["features"][0]["properties"]["timeSeries"]
     coordinates = json_data["features"][0]["geometry"]["coordinates"]
 
@@ -37,6 +35,8 @@ def transform_data_to_dataframe(bucket=None, s3_client=None) -> pd.DataFrame:
     df["longitude"] = coordinates[0]
     df["latitude"] = coordinates[1]
     df["elevation"] = coordinates[2]
+    df = select_wanted_columns(df)
+
 
     pprint(df.head())
     return df

@@ -1,6 +1,17 @@
 import csv
 import boto3
 import os
+import logging
+
+def setup_logger(name=__name__):
+    """Set up a logger with a standard format and INFO level."""
+    logger = logging.getLogger(name)
+    if not logger.handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        )
+    return logger
 
 
 def get_lat_long_from_city(city: str) -> tuple:
@@ -26,7 +37,7 @@ def get_lat_long_from_city(city: str) -> tuple:
     return lat_long
 
 
-def get_s3_client_and_bucket(bucket=None, s3_client=None):
+def get_s3_client_and_landing_bucket(bucket=None, s3_client=None):
     """provides an S3 client and bucket name.
 
     Args:
@@ -42,3 +53,34 @@ def get_s3_client_and_bucket(bucket=None, s3_client=None):
     if not bucket:
         bucket = os.getenv("LANDING_BUCKET_NAME")
     return s3_client, bucket
+
+def select_wanted_columns(df):
+    """Selects only the desired columns from the DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to process.
+
+    Returns:
+        pd.DataFrame: The DataFrame with only the desired columns.
+    """
+    wanted_columns = [
+        "city",
+        "time",
+        "longitude",
+        "latitude",
+        "elevation",
+        "daySignificantWeatherCode",
+        "dayMaxScreenTemperature",
+        "nightMinScreenTemperature",
+        "midday10MWindSpeed",
+        "midday10MWindDirection",
+        "midnight10MWindSpeed",
+        "midnight10MWindDirection",
+        "middayRelativeHumidity",
+        "midnightRelativeHumidity",
+        "dayProbabilityOfRain",
+        "dayProbabilityOfHeavyRain",
+
+        
+    ]
+    return df[[col for col in wanted_columns if col in df.columns]]

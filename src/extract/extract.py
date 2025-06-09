@@ -1,18 +1,11 @@
 from datetime import datetime
 import json
-import logging
 import dotenv
 from api.api import get_forecast_data
-from utils.utils import get_s3_client_and_bucket
+from utils.utils import get_s3_client_and_landing_bucket, setup_logger
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-logger = logging.getLogger(__name__)
+logger = setup_logger(__name__)
 
-# Load environment variables from .env file
 dotenv.load_dotenv()
 
 def get_data_from_api(span: str, city: str) -> dict:
@@ -42,7 +35,8 @@ def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None)
     Returns:
         str: _description_
     """
-    s3_client, bucket = get_s3_client_and_bucket(bucket, s3_client)
+    logger.info(f"Initialising s3 client")
+    s3_client, bucket = get_s3_client_and_landing_bucket(bucket, s3_client)
     logger.info(f"uploading forecast data for {city} with span {span} to S3 bucket {bucket}")
     
 
