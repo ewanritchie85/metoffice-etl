@@ -1,10 +1,9 @@
 from datetime import datetime
 import json
-import boto3
 import logging
-import os
 import dotenv
 from api.api import get_forecast_data
+from utils.utils import get_s3_client_and_bucket
 
 # Configure logging
 logging.basicConfig(
@@ -28,7 +27,7 @@ def get_data_from_api(span: str, city: str) -> dict:
         dict: The JSON response from the API.
     """
     logger.info(f"fetching forecast data for {city} with span {span}")
-    return get_forecast_data(span, city)
+    return get_forecast_data(city, span)
 
 
 def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None) -> str:
@@ -43,15 +42,12 @@ def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None)
     Returns:
         str: _description_
     """
-    if not s3_client:
-        s3_client = boto3.client("s3")
-    if not bucket:
-        bucket = os.getenv("LANDING_BUCKET_NAME")
+    s3_client, bucket = get_s3_client_and_bucket(bucket, s3_client)
     logger.info(f"uploading forecast data for {city} with span {span} to S3 bucket {bucket}")
     
 
     date = datetime.now()
-    date_str = date.strftime("%Y/%m/%d/%H-%M")
+    date_str = date.strftime("%Y/%m/%d/%H")
 
     forecast_data = None
     try:
@@ -61,9 +57,10 @@ def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None)
         forecast_data = {"error": "Failed to fetch data from API"}
 
     s3_client.put_object(
-        Bucket=bucket, Key=f"{city}/{date_str}.json", Body=json.dumps(forecast_data)
+        Bucket=bucket, Key=f"{date_str}/{city}.json", Body=json.dumps(forecast_data)
     )
     return f"{city}/{date_str}.json"
 
+# temporary main function to test extraction and upload
 if __name__ == "__main__":
-    upload_json_to_landing_s3("daily", "Tokyo")
+    upload_json_to_landing_s3("daily", "London")

@@ -23,7 +23,7 @@ def health_check():
 
 
 @app.get("/sitespecific/v0/point/{span}")
-def get_forecast_data(span: str, city: str):
+def get_forecast_data(city: str, span: str='daily'):
     lat_long = get_lat_long_from_city(city)
     latitude, longitude = lat_long[0], lat_long[1]
     url = f"https://data.hub.api.metoffice.gov.uk/sitespecific/v0/point/{span}"
