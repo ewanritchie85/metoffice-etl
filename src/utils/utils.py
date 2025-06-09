@@ -3,6 +3,7 @@ import boto3
 import os
 import logging
 
+
 def setup_logger(name=__name__):
     """Set up a logger with a standard format and INFO level."""
     logger = logging.getLogger(name)
@@ -41,7 +42,7 @@ def get_s3_client_and_landing_bucket(bucket=None, s3_client=None):
     """provides an S3 client and bucket name.
 
     Args:
-        bucket: Bucket name. Defaults to None as it is fetched 
+        bucket: Bucket name. Defaults to None as it is fetched
                 from environment variable if not provided.
         s3_client : Defaults to None and is created if not provided.
 
@@ -53,6 +54,7 @@ def get_s3_client_and_landing_bucket(bucket=None, s3_client=None):
     if not bucket:
         bucket = os.getenv("LANDING_BUCKET_NAME")
     return s3_client, bucket
+
 
 def select_wanted_columns(df):
     """Selects only the desired columns from the DataFrame.
@@ -80,7 +82,5 @@ def select_wanted_columns(df):
         "midnightRelativeHumidity",
         "dayProbabilityOfRain",
         "dayProbabilityOfHeavyRain",
-
-        
     ]
     return df[[col for col in wanted_columns if col in df.columns]]

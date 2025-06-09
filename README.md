@@ -26,5 +26,13 @@ This project performs an Extract-Transform-Load (ETL) workflow to collect weathe
     ```
     s3://<bucket-name>/<city>/<YYYY>/<MM>/<DD>/<HH-MM>.json
     ```
+### 4. Data Transformation
+
+- The function `transform_data_to_dataframe`:
+  - Retrieves  forecast JSON file from the landing S3 bucket.
+  - Extracts the `timeSeries` from the GeoJSON structure.
+  - Flattens the nested structure into a clean `pandas.DataFrame`.
+  - Selects desired fields
+  - Adds metadata including `city`, `longitude`, `latitude`, and `elevation`.
 
 ---
