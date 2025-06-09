@@ -34,6 +34,9 @@ requirements.txt
 # Terraform backend config
 terraform/backend.hcl
 
+# test coverage log
+.coverage
+
 # Crash log files
 crash.log
 
