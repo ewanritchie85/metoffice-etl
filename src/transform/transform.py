@@ -8,7 +8,6 @@ from utils.utils import (
     setup_logger,
 )
 
-# Configure logging
 logger = setup_logger(__name__)
 
 dotenv.load_dotenv()
