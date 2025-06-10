@@ -1,2 +1,6 @@
 aws_region = "eu-west-2"
 aws_profile = "your aws profile"
+
+landing_bucket_name = "landing-bucket"
+
+loading_db_name = "cleandb"

@@ -1,5 +1,9 @@
-organization = "your HCL organisation name"
+terraform {
+  cloud {
+    organization = "your TFC organisation name"
 
-workspaces {
-  name = "your HCL workspace name"
+    workspaces {
+      name = "your TFC workspace name"
+    }
+  }
 }
