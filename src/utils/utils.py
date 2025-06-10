@@ -77,6 +77,5 @@ def select_wanted_columns(df):
         "middayRelativeHumidity",
         "midnightRelativeHumidity",
         "dayProbabilityOfRain",
-        "dayProbabilityOfHeavyRain",
     ]
     return df[[col for col in wanted_columns if col in df.columns]]

@@ -61,4 +61,4 @@ def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None)
 
 # temporary main function to test extraction and upload
 if __name__ == "__main__":
-    upload_json_to_landing_s3("daily", "London")
+    upload_json_to_landing_s3("daily", "Tokyo")
