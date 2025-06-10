@@ -1,6 +1,10 @@
 
 # Met Office ETL Project
 
+## Pre-requisites
+metoffice global spot API key
+AWS credentials
+
 ## ETL Flow Overview
 
 This project performs an Extract-Transform-Load (ETL) workflow to collect weather forecast data from the Met Office API and store it in an S3 bucket.
