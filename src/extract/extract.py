@@ -2,7 +2,8 @@ from datetime import datetime
 import json
 import dotenv
 from api.api import get_forecast_data
-from utils.utils import get_s3_client_and_landing_bucket, setup_logger
+from utils.utils import setup_logger
+from utils.utils import get_s3_client_and_landing_bucket
 
 logger = setup_logger(__name__)
 
@@ -36,14 +37,14 @@ def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None)
     Returns:
         str: path to S3 object. just for reference and verification
     """
-    logger.info(f"Initialising s3 client")
+    logger.info("Initialising s3 client")
     s3_client, bucket = get_s3_client_and_landing_bucket(bucket, s3_client)
     logger.info(
         f"uploading forecast data for {city} with span {span} to S3 bucket {bucket}"
     )
 
     date = datetime.now()
-    date_str = date.strftime("%Y/%m/%d/%H")
+    date_str = date.strftime("%Y-%m-%d-%H:%M")
 
     forecast_data = None
     try:

@@ -1,5 +1,5 @@
-organization = "your organisation name"
+organization = "your HCL organisation name"
 
 workspaces {
-  name = "your workspace name"
+  name = "your HCL workspace name"
 }

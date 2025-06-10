@@ -1,7 +1,7 @@
 import csv
-import boto3
 import os
 import logging
+import boto3
 
 
 def setup_logger(name=__name__):
@@ -66,11 +66,7 @@ def select_wanted_columns(df):
         pd.DataFrame: The DataFrame with only the desired columns.
     """
     wanted_columns = [
-        "city",
         "time",
-        "longitude",
-        "latitude",
-        "elevation",
         "daySignificantWeatherCode",
         "dayMaxScreenTemperature",
         "nightMinScreenTemperature",

@@ -1,4 +1,3 @@
-from pprint import pprint
 import json
 import dotenv
 import pandas as pd
@@ -28,17 +27,19 @@ def transform_data_to_dataframe(bucket=None, s3_client=None) -> pd.DataFrame:
     logger.info(f"Reading {key}")
     json_data = json.loads(response["Body"].read().decode("utf-8"))
 
-    forecast = json_data["features"][0]["properties"]["timeSeries"]
+    forecasts = json_data["features"][0]["properties"]["timeSeries"]
     coordinates = json_data["features"][0]["geometry"]["coordinates"]
 
-    df = pd.DataFrame(forecast)
-    df["city"] = city
-    df["longitude"] = coordinates[0]
-    df["latitude"] = coordinates[1]
-    df["elevation"] = coordinates[2]
+    df = pd.DataFrame(forecasts)
+    
     df = select_wanted_columns(df)
+    df.insert(0, 'City', city)
+    df["Latitude"] = coordinates[1]
+    df["Longitude"] = coordinates[0]
+    df["Elevation"] = coordinates[2]
 
-    pprint(df.head())
+    
+    df.to_csv('data/test_csv.csv', index=False)
     return df
 
 
