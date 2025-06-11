@@ -22,7 +22,9 @@ def db_connection():
         raise
 
 def create_db_table() -> None:
+    logger.info("making DB connection")
     conn = db_connection()
+    logger.info("Creating DB Table")
     with conn.cursor() as cursor:
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS weather_forecast (
@@ -49,7 +51,10 @@ def create_db_table() -> None:
         )
     """)
     conn.commit()
-
     logger.info("Table created successfully")
     conn.close()
     return
+
+# temporary main function to test DB connection and table creation
+if __name__ == "__main__":
+    create_db_table()

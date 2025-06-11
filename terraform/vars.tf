@@ -22,12 +22,24 @@ variable "loading_db_name" {
 
 }
 
-variable "loading_db_username"{
+variable "loading_db_username" {
+  # stored in terraform cloud
   description = "Username for loading db access"
-  type = string
+  type        = string
 }
 
 variable "loading_db_password" {
+  # stored in terraform cloud
   description = "DB password"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "VPC id"
+  type        = string
+}
+
+variable "my_ip_cidr" {
+  description = " local IP CIDR"
   type = string
 }
