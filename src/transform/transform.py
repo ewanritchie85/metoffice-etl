@@ -40,12 +40,30 @@ def transform_data_to_dataframe(bucket=None, s3_client=None) -> list:
             df["Latitude"] = coordinates[1]
             df["Longitude"] = coordinates[0]
             df["Elevation"] = coordinates[2]
+            df = rename_columns(df)
             dfs.append(df)
         except (KeyError, json.JSONDecodeError) as e:
             logger.warning(f"skipping {key} due to: {e}") # type: ignore
             continue
-    pprint(dfs)
+    pprint(dfs) #to be removed later
     return dfs
+
+
+# Matches columns with db schema
+def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
+    return df.rename(columns={
+        "time": "forecast_time",
+        "daySignificantWeatherCode": "weather_code",
+        "dayMaxScreenTemperature": "max_temp",
+        "nightMinScreenTemperature": "min_temp",
+        "midday10MWindSpeed": "midday_wind_speed",
+        "midday10MWindDirection": "midday_wind_dir",
+        "midnight10MWindSpeed": "midnight_wind_speed",
+        "midnight10MWindDirection": "midnight_wind_dir",
+        "middayRelativeHumidity": "midday_humidity",
+        "midnightRelativeHumidity": "midnight_humidity",
+        "dayProbabilityOfRain": "rain_prob"
+    })
 
 
 

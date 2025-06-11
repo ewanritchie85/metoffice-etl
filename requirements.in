@@ -21,3 +21,5 @@ pandas
 
 #  for database sql logic
 pymysql
+
+sqlalchemy
