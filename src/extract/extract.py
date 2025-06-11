@@ -25,7 +25,7 @@ def get_data_from_api(span: str, city: str) -> dict:
     return get_forecast_data(city, span)
 
 
-def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None) -> str:
+def upload_json_to_landing_s3( city: str, span: str="daily", bucket=None, s3_client=None) -> str:
     """Uploads forecast data JSON to landing S3 bucket.
 
     Args:
@@ -59,6 +59,12 @@ def upload_json_to_landing_s3(span: str, city: str, bucket=None, s3_client=None)
     return f"{date_str}/{city}.json"
 
 
+def upload_multiple_cities_json(cities: list) -> None:
+    logger.info("uploading all city forecasts to S3")
+    for city in cities:
+        upload_json_to_landing_s3(city)
+    return
+
 # temporary main function to test extraction and upload
 if __name__ == "__main__":
-    upload_json_to_landing_s3("daily", "Tokyo")
+    upload_multiple_cities_json(["Tokyo", "london", "edinburgh"])

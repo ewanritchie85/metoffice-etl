@@ -35,11 +35,11 @@ variable "loading_db_password" {
 }
 
 variable "vpc_id" {
-  description = "VPC id"
+  description = "DB VPC id"
   type        = string
 }
 
 variable "my_ip_cidr" {
-  description = " local IP CIDR"
+  description = "Local IP CIDR"
   type = string
 }

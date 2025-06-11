@@ -4,3 +4,8 @@ aws_profile = "your aws profile"
 landing_bucket_name = "landing-bucket"
 
 loading_db_name = "cleandb"
+
+
+my_ip_cidr="<your local ip>/32"
+
+vpc_id="<DB vpc id>"
