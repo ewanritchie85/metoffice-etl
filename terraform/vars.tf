@@ -44,3 +44,7 @@ variable "my_ip_cidr" {
   type = string
 }
 
+variable "ecr_image_path"{
+  description = "path to image file in ECR "
+  type = string
+}

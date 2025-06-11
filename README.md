@@ -5,6 +5,7 @@
 metoffice global spot API key
 Terraform Cloud account with org and workspace created
 AWS credentials - stored in Terraform Cloud as env variables
+AMAZON ECR created manually to store project docker image
 
 
 ## ETL Flow Overview
