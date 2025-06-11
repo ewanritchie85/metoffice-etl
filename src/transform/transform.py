@@ -60,6 +60,7 @@ def transform_data_to_dataframe(bucket=None, s3_client=None) -> list:
             df["Longitude"] = coordinates[0]
             df["Elevation"] = coordinates[2]
             df = rename_columns(df)
+            df["forecast_time"] = pd.to_datetime(df["forecast_time"]).dt.tz_localize(None)
             dfs.append(df)
             newly_processed.append(key)
         except (KeyError, json.JSONDecodeError) as e:

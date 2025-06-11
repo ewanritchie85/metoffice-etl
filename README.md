@@ -36,13 +36,15 @@ This project performs an Extract-Transform-Load (ETL) workflow to collect weathe
 ### 4. Data Transformation
 
 - The function `transform_data_to_dataframe`:
-  - Retrieves  forecast JSON files from the landing S3 bucket.
+  - Retrieves **only new** forecast JSON files from the landing S3 bucket (tracked using `processed_keys.txt` in S3).
   - Extracts the weather data from the GeoJSON structure.
   - Flattens the nested structure into a clean `pandas.DataFrame`.
   - Selects desired fields and adds `city`, `longitude`, `latitude`, and `elevation`.
-  - renames dataframe columns to match DB schema
-  - Returns a list of clean dataframes
+  - Renames dataframe columns to match DB schema.
+  - Returns a list of clean dataframes.
 
 ### 5. Cleaned Data DB Loading
-- SQLAlchemy and pandas upload cleaned dataframes to RDS instance
+
+- SQLAlchemy and pandas upload cleaned dataframes to RDS instance.
+- The loader compares forecast `City` and `forecast_time` values against existing entries and **only inserts new records**, avoiding duplicates based on a unique constraint in the database.
 ---
