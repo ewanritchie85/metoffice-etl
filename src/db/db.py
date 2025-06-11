@@ -59,7 +59,13 @@ def create_db_table() -> None:
     conn.close()
     return
 
-
-# temporary main function to test DB connection and table creation
-if __name__ == "__main__":
-    create_db_table()
+def drop_db_table():
+    conn = db_connection()
+    logger.info("Clearing DB table")
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "DROP TABLE weather_forecast"
+        )
+    conn.commit()
+    logger.info("Table dropped successfully")
+    conn.close()

@@ -65,6 +65,3 @@ def upload_multiple_cities_json(cities: list) -> None:
         upload_json_to_landing_s3(city)
     return
 
-# temporary main function to test extraction and upload
-if __name__ == "__main__":
-    upload_multiple_cities_json(["Tokyo", "london", "edinburgh"])
