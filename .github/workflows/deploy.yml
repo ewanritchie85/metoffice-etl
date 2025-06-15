@@ -38,6 +38,8 @@ jobs:
       - name: Debug AWS credentials
         run: aws sts get-caller-identity
 
+      - name: List files for debugging
+        run: ls -lh  
       - name: Upload lambda package to S3
         run: |
           aws s3 cp lambda_package.zip s3://$LAMBDA_BUCKET/$LAMBDA_KEY
