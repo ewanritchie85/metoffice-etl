@@ -69,7 +69,7 @@ build-lambda: ## build lambda zip file
 		-w /var/task \
 		amazonlinux:2023 -c "\
 			yum install -y gcc python3 python3-devel python3-pip zip && \
-			pip3 install -r requirements.txt -t lambda_package && \
+			pip3 install --only-binary=:all: --platform manylinux2014_x86_64 --target lambda_package -r requirements.txt && \
 			cp -r src/* lambda_package/ && \
 			cd lambda_package && zip -r ../lambda_package.zip ."
 	rm -rf lambda_package
