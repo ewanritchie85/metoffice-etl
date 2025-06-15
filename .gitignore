@@ -56,3 +56,5 @@ override.tf.json
 # Sensitive config files
 .terraformrc
 terraform.rc
+
+lambda_package.zip
