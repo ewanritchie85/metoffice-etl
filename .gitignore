@@ -22,7 +22,6 @@ ENV/
 # Mac system files
 .DS_Store
 
-requirements.txt
 
 # Local .terraform directories
 **/.terraform/*
