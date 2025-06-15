@@ -20,11 +20,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies and build lambda package
+      - name: Build lambda package using Amazon Linux
         run: |
-          pip install -r requirements.txt -t lambda_package
-          cp -r src/* lambda_package/
-          cd lambda_package && zip -r ../lambda_package.zip .
+          docker run --rm -v "$PWD":/var/task -w /var/task amazonlinux:2023 bash -c "\
+            yum install -y python3-pip zip && \
+            pip3 install -r requirements.txt -t lambda_package && \
+            cp -r src/* lambda_package/ && \
+            cd lambda_package && zip -r ../lambda_package.zip ."
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
