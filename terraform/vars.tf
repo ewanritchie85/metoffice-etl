@@ -41,10 +41,15 @@ variable "vpc_id" {
 
 variable "my_ip_cidr" {
   description = "Local IP CIDR"
-  type = string
+  type        = string
 }
 
-variable "ecr_image_path"{
+variable "ecr_image_path" {
   description = "path to image file in ECR "
-  type = string
+  type        = string
+}
+
+variable "lambda_package_key" {
+  description = "path to lambda zip file"
+  type        = string
 }

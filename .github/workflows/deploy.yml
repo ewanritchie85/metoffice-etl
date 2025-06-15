@@ -1,0 +1,50 @@
+name: Build and Deploy Lambda
+
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: eu-west-2 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies and build lambda package
+        run: |
+          pip install -r requirements.txt -t lambda_package
+          cp -r src/* lambda_package/
+          cd lambda_package && zip -r ../lambda_package.zip .
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload lambda package to S3
+        run: |
+          aws s3 cp lambda_package.zip s3://$LAMBDA_BUCKET/$LAMBDA_KEY
+        env:
+          LAMBDA_BUCKET: ${{ secrets.LAMBDA_BUCKET }}
+          LAMBDA_KEY: ${{ secrets.LAMBDA_KEY }}
+
+      - name: Trigger Terraform Cloud Apply
+        run: |
+          curl \
+            --header "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
+            --header "Content-Type: application/vnd.api+json" \
+            --request POST \
+            --data '{"data":{"type":"run","attributes":{"is-destroy":false},"relationships":{"workspace":{"data":{"type":"workspaces","name":"metoffice-etl"}}}}}' \
+            https://app.terraform.io/api/v2/runs

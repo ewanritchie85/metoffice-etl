@@ -6,7 +6,7 @@ from utils.utils import setup_logger
 logger = setup_logger(__name__)
 
 def main():
-    cities = ["London", "Tokyo", "New York", "Edinburgh", "Toronto", "Sydney", "aberdeen"]
+    cities = ["London", "Tokyo", "New York", "Edinburgh", "Toronto", "Sydney", "Aberdeen"]
 
     logger.info("Starting ETL pipeline")
     

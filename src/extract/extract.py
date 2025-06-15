@@ -65,3 +65,8 @@ def upload_multiple_cities_json(cities: list) -> None:
         upload_json_to_landing_s3(city)
     return
 
+
+def lambda_handler(event, context):
+    # Example cities; replace with dynamic input if needed
+    cities = ["London", "Tokyo", "New York", "Edinburgh", "Toronto", "Sydney", "Aberdeen"]
+    upload_multiple_cities_json(cities)

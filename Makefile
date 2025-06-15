@@ -61,6 +61,12 @@ check-coverage: ## Run test coverage  check
 	
 run-checks: run-black unit-test check-coverage ## Run Black, unit tests and coverage checks
 
+build-lambda:
+	pip install -r requirements.txt -t lambda_package
+	cp -r src/* lambda_package/
+	cd lambda_package && zip -r ../lambda_package.zip .
+	rm -rf lambda_package
+
 clean: ## Clean up environment and caches
 
 	rm -rf venv __pycache__ .pytest_cache .mypy_cache .coverage
