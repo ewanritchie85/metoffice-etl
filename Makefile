@@ -61,12 +61,17 @@ check-coverage: ## Run test coverage  check
 	
 run-checks: run-black unit-test check-coverage ## Run Black, unit tests and coverage checks
 
-build-lambda:
-	docker run --rm --entrypoint bash -v "$$(pwd)":/var/task -w /var/task amazonlinux:2023 -c "\
-		yum install -y gcc python3 python3-pip python3-devel zip && \
-		pip3 install -r requirements.txt -t lambda_package && \
-		cp -r src/* lambda_package/ && \
-		cd lambda_package && zip -r ../lambda_package.zip ."
+build-lambda: ## build lambda zip file
+	docker run --rm \
+		--platform linux/amd64 \
+		--entrypoint bash \
+		-v "$$(pwd)":/var/task \
+		-w /var/task \
+		amazonlinux:2023 -c "\
+			yum install -y gcc python3 python3-devel python3-pip zip && \
+			pip3 install -r requirements.txt -t lambda_package && \
+			cp -r src/* lambda_package/ && \
+			cd lambda_package && zip -r ../lambda_package.zip ."
 	rm -rf lambda_package
 
 clean: ## Clean up environment and caches
