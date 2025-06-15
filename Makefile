@@ -64,7 +64,6 @@ run-checks: run-black unit-test check-coverage ## Run Black, unit tests and cove
 build-lambda:
 	docker run --rm -v "$$(pwd)":/var/task -w /var/task amazonlinux:2023 bash -c "\
 		yum install -y python3-pip zip gcc python3-devel && \
-		pip3 install --upgrade pip setuptools wheel && \
 		pip3 install -r requirements.txt -t lambda_package && \
 		cp -r src/* lambda_package/ && \
 		cd lambda_package && zip -r ../lambda_package.zip ."
