@@ -22,7 +22,7 @@ jobs:
 
       - name: Build lambda package using Amazon Linux
         run: |
-          docker run --rm --entrypoint bash -v "$$(pwd)":/var/task -w /var/task amazonlinux:2023 -c "\
+          docker run --rm --entrypoint bash -v "${{ github.workspace }}":/var/task -w /var/task amazonlinux:2023 -c "\
             yum install -y gcc python3 python3-pip python3-devel zip && \
             pip3 install -r requirements.txt -t lambda_package && \
             cp -r src/* lambda_package/ && \
