@@ -14,7 +14,7 @@ uvicorn
 # for AWS interactions
 boto3
 
-
+requests
 
 # for data manipulation
 pandas
