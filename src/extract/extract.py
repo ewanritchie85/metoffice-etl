@@ -1,13 +1,16 @@
+import os
 from datetime import datetime
 import json
-import dotenv
+from dotenv import load_dotenv
 from api.api import get_forecast_data
 from utils.utils import setup_logger
 from utils.utils import get_s3_client_and_landing_bucket
 
 logger = setup_logger(__name__)
 
-dotenv.load_dotenv()
+
+if os.getenv("RUNNING_IN_ECS") != "true":
+    load_dotenv()
 
 
 def get_data_from_api(span: str, city: str) -> dict:

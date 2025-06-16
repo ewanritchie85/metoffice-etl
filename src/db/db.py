@@ -5,7 +5,9 @@ from dotenv import load_dotenv
 from utils.utils import setup_logger
 
 logger = setup_logger(__name__)
-load_dotenv()
+
+if os.getenv("RUNNING_IN_ECS") != "true":
+    load_dotenv()
 
 
 def db_connection():

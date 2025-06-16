@@ -5,7 +5,9 @@ from utils.utils import setup_logger
 import os
 from sqlalchemy import create_engine, text
 
-load_dotenv()
+# this ensures .env not used when ECS runs python script
+if os.getenv("RUNNING_IN_ECS") != "true":
+    load_dotenv()
 logger = setup_logger(__name__)
 
 

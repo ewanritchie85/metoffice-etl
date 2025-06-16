@@ -57,6 +57,10 @@ resource "aws_ecs_task_definition" "etl_task" {
         {
           name  = "DB_PASSWORD"
           value = "${var.loading_db_password}"
+        },
+        {
+          name  = "RUNNING_IN_ECS"
+          value = "true"
         }
       ]
 

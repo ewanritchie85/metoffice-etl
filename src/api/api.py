@@ -6,7 +6,9 @@ from utils.utils import get_lat_long_from_city
 
 # API key stored as an environment variable
 # Make sure to create a .env file with the key METOFFICE_API_KEY
-load_dotenv()
+
+if os.getenv("RUNNING_IN_ECS") != "true":
+    load_dotenv()
 API_KEY = os.getenv("METOFFICE_API_KEY")
 
 app = FastAPI()
