@@ -37,10 +37,10 @@ jobs:
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
 
-      - name: Update ECS service
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ecs-task-def.json
-          service: metoffice-etl-service
-          cluster: metoffice-ecs-cluster
-          wait-for-service-stability: true
+      - name: Force ECS service redeployment
+        run: |
+         aws ecs update-service \
+          --cluster metoffice-ecs-cluster \
+          --service metoffice-etl-service \
+          --force-new-deployment \
+          --region $AWS_REGION
