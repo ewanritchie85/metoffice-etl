@@ -3,6 +3,8 @@ from transform.transform import transform_data_to_dataframe
 from load.load import insert_forecasts_to_db
 from utils.utils import setup_logger
 
+
+
 logger = setup_logger(__name__)
 
 

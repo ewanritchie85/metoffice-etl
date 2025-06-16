@@ -7,6 +7,8 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
+ENV PYTHONPATH="${PYTHONPATH}:/app/src"
+
 # Install dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
