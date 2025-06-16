@@ -38,3 +38,18 @@ resource "aws_ecs_task_definition" "etl_task" {
   ])
 }
 
+resource "aws_ecs_service" "etl_service" {
+  name            = "metoffice-etl-service"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.etl_task.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = [aws_subnet.private_a.id, aws_subnet.private_b.id]   
+    security_groups  = [aws_security_group.ecs_service_sg.id]
+    assign_public_ip = true
+  }
+
+  depends_on = [aws_iam_role.ecs_exec_role]
+}
