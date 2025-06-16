@@ -59,7 +59,7 @@ unit-test: ## Run unit tests using pytest
 check-coverage: ## Run test coverage  check
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest --cov=src ./tests/)
 	
-run-checks: run-black unit-test check-coverage ## Run Black, unit tests and coverage checks
+run-checks: run-black unit-test check-coverage ## Run  Black, unit tests and coverage checks
 
 clean: ## Clean up environment and caches
 
