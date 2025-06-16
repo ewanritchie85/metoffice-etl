@@ -1,11 +1,30 @@
-aws_region = "eu-west-2"
-aws_profile = "your aws profile"
+aws_region = "your aws region"
+aws_profile = "your aws profile name"
 
-landing_bucket_name = "landing-bucket"
+metoffice_api_key="Met office API key"
 
-loading_db_name = "cleandb"
+landing_bucket_name = "name of s3 bucket for landing raw data"
 
+loading_db_name = "name of rds db for cleaned data"
 
-my_ip_cidr="<your local ip>/32"
+loading_db_password="password for rds db"
 
-vpc_id="<DB vpc id>"
+db_port="rds db port"
+
+db_host="end point for rds db"
+
+my_ip_cidr=" your local CIDR block"
+
+vpc_id="AWS VPC id"
+
+vpc_name = "VPC name"
+
+ecr_image_path = "path to ECR repo's docker image"
+
+ecs_cluster_name = "name of ECS cluster"
+
+subnet_private_a_name = "private subnet a name"
+
+subnet_private_b_name = "private subnet b name"
+
+container_name = "name of docker container"
