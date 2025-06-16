@@ -53,3 +53,9 @@ resource "aws_ecs_service" "etl_service" {
 
   depends_on = [aws_iam_role.ecs_exec_role]
 }
+
+resource "aws_cloudwatch_log_group" "ecs_logs" {
+  name              = "/ecs/metoffice-etl"
+  retention_in_days = 7
+
+}
