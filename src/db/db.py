@@ -11,8 +11,8 @@ load_dotenv()
 def db_connection():
     try:
         conn = pymysql.connect(
-            host=cast(str, os.getenv("DB_ENDPOINT")),
-            user=cast(str, os.getenv("DB_USER_NAME")),
+            host=cast(str, os.getenv("DB_HOST")),
+            user=cast(str, os.getenv("DB_USER")),
             password=cast(str, os.getenv("DB_PASSWORD")),
             database=cast(str, os.getenv("DB_NAME")),
             port=int(os.getenv("DB_PORT", "3306")),
