@@ -48,7 +48,7 @@ resource "aws_ecs_service" "etl_service" {
   network_configuration {
     subnets          = [aws_subnet.private_a.id, aws_subnet.private_b.id]   
     security_groups  = [aws_security_group.ecs_service_sg.id]
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   depends_on = [aws_iam_role.ecs_exec_role]
