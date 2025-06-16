@@ -27,6 +27,8 @@ resource "aws_ecs_task_definition" "etl_task" {
       name      = "${var.container_name}"
       image     = "${var.ecr_image_path}"
       essential = true
+
+
       environment = [
         {
           name  = "METOFFICE_API_KEY"
@@ -35,8 +37,31 @@ resource "aws_ecs_task_definition" "etl_task" {
         {
           name  = "LANDING_BUCKET_NAME"
           value = "${var.landing_bucket_name}"
+        },
+        {
+          name  = "DB_HOST"
+          value = "${var.db_host}"
+        },
+        {
+          name  = "DB_PORT"
+          value = "${var.db_port}"
+        },
+        {
+          name  = "DB_NAME"
+          value = "${var.loading_db_name}"
+        },
+        {
+          name  = "DB_USER"
+          value = "${var.loading_db_username}"
+        },
+        {
+          name  = "DB_PASSWORD"
+          value = "${var.loading_db_password}"
         }
       ]
+
+
+
       logConfiguration = {
         logDriver = "awslogs"
         options = {

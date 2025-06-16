@@ -40,6 +40,16 @@ variable "loading_db_password" {
   type        = string
 }
 
+variable "db_port" {
+  description = "loading db port"
+  type = string
+}
+
+variable "db_host" {
+  description = "loading db host"
+  type = string
+}
+
 variable "vpc_id" {
   description = "DB VPC id"
   type        = string
