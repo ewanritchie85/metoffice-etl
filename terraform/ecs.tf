@@ -30,6 +30,10 @@ resource "aws_ecs_task_definition" "etl_task" {
         {
           name  = "METOFFICE_API_KEY"
           value = "${var.metoffice_api_key}"
+        },
+        {
+          name  = "LANDING_BUCKET_NAME"
+          value = "${var.landing_bucket_name}"
         }
       ]
       logConfiguration = {
