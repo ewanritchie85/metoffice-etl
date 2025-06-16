@@ -1,9 +1,11 @@
+import os
+from dotenv import load_dotenv
 from extract.extract import upload_multiple_cities_json
 from transform.transform import transform_data_to_dataframe
 from load.load import insert_forecasts_to_db
 from utils.utils import setup_logger
 
-
+load_dotenv()
 
 logger = setup_logger(__name__)
 
@@ -18,7 +20,7 @@ def main():
         "Sydney",
         "Aberdeen",
     ]
-
+    logger.info(f"ENV METOFFICE_API_KEY = {os.getenv('METOFFICE_API_KEY')}")
     logger.info("Starting ETL pipeline")
 
     # Extract
