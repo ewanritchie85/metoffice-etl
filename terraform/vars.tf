@@ -10,6 +10,12 @@ variable "aws_profile" {
 
 }
 
+variable "metoffice_api_key" {
+  description = "api key for met office api"
+  type = string
+  
+}
+
 variable "landing_bucket_name" {
   description = "Name of the S3 bucket for landing data"
   type        = string

@@ -26,6 +26,12 @@ resource "aws_ecs_task_definition" "etl_task" {
       name      = "${var.container_name}"
       image     = "${var.ecr_image_path}"
       essential = true
+      environment = [
+        {
+          name  = "METOFFICE_API_KEY"
+          value = "${var.metoffice_api_key}"
+        }
+      ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -46,7 +52,7 @@ resource "aws_ecs_service" "etl_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = [aws_subnet.private_a.id, aws_subnet.private_b.id]   
+    subnets          = [aws_subnet.private_a.id, aws_subnet.private_b.id]
     security_groups  = [aws_security_group.ecs_service_sg.id]
     assign_public_ip = false
   }
