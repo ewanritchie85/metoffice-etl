@@ -15,8 +15,6 @@ logger = setup_logger(__name__)
 def main():
     cities = [
         "London",
-        "Tokyo",
-        "New York",
         "Edinburgh",
         "Toronto",
         "Sydney",
