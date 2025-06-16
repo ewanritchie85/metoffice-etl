@@ -49,7 +49,31 @@ variable "ecr_image_path" {
   type        = string
 }
 
-variable "lambda_package_key" {
-  description = "path to lambda zip file"
+variable "ecs_cluster_name" {
+  description = "name of aws ecs cluster"
+  type        = string
+
+}
+
+
+
+variable "container_name" {
+  description = "name of ETL container image"
+  type        = string
+
+}
+
+variable "vpc_name" {
+  description = "Name of the VPC"
+  type        = string
+}
+
+variable "subnet_private_a_name" {
+  description = "Name of the first private subnet"
+  type        = string
+}
+
+variable "subnet_private_b_name" {
+  description = "Name of the second private subnet"
   type        = string
 }

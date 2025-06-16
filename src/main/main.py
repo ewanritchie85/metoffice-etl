@@ -5,11 +5,20 @@ from utils.utils import setup_logger
 
 logger = setup_logger(__name__)
 
+
 def main():
-    cities = ["London", "Tokyo", "New York", "Edinburgh", "Toronto", "Sydney", "Aberdeen"]
+    cities = [
+        "London",
+        "Tokyo",
+        "New York",
+        "Edinburgh",
+        "Toronto",
+        "Sydney",
+        "Aberdeen",
+    ]
 
     logger.info("Starting ETL pipeline")
-    
+
     # Extract
     logger.info("Extracting forecast data to S3")
     upload_multiple_cities_json(cities)
@@ -23,6 +32,7 @@ def main():
     insert_forecasts_to_db(dfs)
 
     logger.info("ETL pipeline complete")
+
 
 if __name__ == "__main__":
     main()

@@ -14,6 +14,7 @@ dotenv.load_dotenv()
 # S3 processed keys tracking
 PROCESSED_KEYS_PATH = "processed/processed_keys.txt"
 
+
 def load_processed_keys_from_s3(s3_client=None, bucket=None) -> set:
     s3_client, bucket = get_s3_client_and_landing_bucket(bucket, s3_client)
     logger.info("Getting processed keys from S3")
@@ -22,6 +23,7 @@ def load_processed_keys_from_s3(s3_client=None, bucket=None) -> set:
         return set(response["Body"].read().decode("utf-8").splitlines())
     except s3_client.exceptions.NoSuchKey:
         return set()
+
 
 def save_processed_keys_to_s3(keys: list, s3_client=None, bucket=None) -> None:
     s3_client, bucket = get_s3_client_and_landing_bucket(bucket, s3_client)
@@ -37,13 +39,13 @@ def transform_data_to_dataframe(bucket=None, s3_client=None) -> list:
     processed_keys = load_processed_keys_from_s3()
     newly_processed = []
 
-    bucket_objects = s3_client.list_objects_v2(Bucket=bucket)['Contents']
+    bucket_objects = s3_client.list_objects_v2(Bucket=bucket)["Contents"]
     for object in bucket_objects:
-        key = object['Key']
-        if not key or not key.endswith('.json') or key in processed_keys:
+        key = object["Key"]
+        if not key or not key.endswith(".json") or key in processed_keys:
             continue
         try:
-            city = key.split('/')[-1].replace('.json', '')
+            city = key.split("/")[-1].replace(".json", "")
             logger.info(f"Retrieving S3 object: {key}")
             response = s3_client.get_object(Bucket=bucket, Key=key)
 
@@ -60,7 +62,9 @@ def transform_data_to_dataframe(bucket=None, s3_client=None) -> list:
             df["Longitude"] = coordinates[0]
             df["Elevation"] = coordinates[2]
             df = rename_columns(df)
-            df["forecast_time"] = pd.to_datetime(df["forecast_time"]).dt.tz_localize(None)
+            df["forecast_time"] = pd.to_datetime(df["forecast_time"]).dt.tz_localize(
+                None
+            )
             dfs.append(df)
             newly_processed.append(key)
         except (KeyError, json.JSONDecodeError) as e:
@@ -76,16 +80,18 @@ def transform_data_to_dataframe(bucket=None, s3_client=None) -> list:
 
 # Matches columns with db schema
 def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
-    return df.rename(columns={
-        "time": "forecast_time",
-        "daySignificantWeatherCode": "weather_code",
-        "dayMaxScreenTemperature": "max_temp",
-        "nightMinScreenTemperature": "min_temp",
-        "midday10MWindSpeed": "midday_wind_speed",
-        "midday10MWindDirection": "midday_wind_dir",
-        "midnight10MWindSpeed": "midnight_wind_speed",
-        "midnight10MWindDirection": "midnight_wind_dir",
-        "middayRelativeHumidity": "midday_humidity",
-        "midnightRelativeHumidity": "midnight_humidity",
-        "dayProbabilityOfRain": "rain_prob"
-    })
+    return df.rename(
+        columns={
+            "time": "forecast_time",
+            "daySignificantWeatherCode": "weather_code",
+            "dayMaxScreenTemperature": "max_temp",
+            "nightMinScreenTemperature": "min_temp",
+            "midday10MWindSpeed": "midday_wind_speed",
+            "midday10MWindDirection": "midday_wind_dir",
+            "midnight10MWindSpeed": "midnight_wind_speed",
+            "midnight10MWindDirection": "midnight_wind_dir",
+            "middayRelativeHumidity": "midday_humidity",
+            "midnightRelativeHumidity": "midnight_humidity",
+            "dayProbabilityOfRain": "rain_prob",
+        }
+    )

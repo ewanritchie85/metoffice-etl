@@ -1,62 +1,35 @@
-name: Build and Deploy Lambda
+
+
+name: Deploy to ECS
 
 on:
   push:
-    branches: [main]
-
-env:
-  AWS_REGION: eu-west-2 
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPO_NAME }}
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+
+      - name: Update ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          python-version: "3.12"
-
-      - name: Build lambda package using Amazon Linux
-        run: |
-          docker run --rm \
-            --platform linux/amd64 \
-            --entrypoint bash \
-            -v "${{ github.workspace }}":/var/task \
-            -w /var/task \
-            amazonlinux:2023 -c "\
-              yum install -y gcc python3 python3-devel python3-pip zip && \
-              pip3 install --only-binary=:all: --platform manylinux2014_x86_64 --target lambda_package -r requirements.txt && \
-              cp -r src/* lambda_package/ && \
-              cd lambda_package && zip -r ../lambda_package.zip ."
-
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Debug AWS credentials
-        run: aws sts get-caller-identity
-
-      - name: List files for debugging
-        run: ls -lh  
-      - name: Upload lambda package to S3
-        run: |
-          aws s3 cp lambda_package.zip s3://$LAMBDA_BUCKET/$LAMBDA_KEY
-        env:
-          LAMBDA_BUCKET: ${{ secrets.LAMBDA_BUCKET }}
-          LAMBDA_KEY: ${{ secrets.LAMBDA_KEY }}
-
-      - name: Trigger Terraform Cloud Apply
-        run: |
-          curl \
-            --header "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
-            --header "Content-Type: application/vnd.api+json" \
-            --request POST \
-            --data '{"data":{"type":"run","attributes":{"is-destroy":false},"relationships":{"workspace":{"data":{"type":"workspaces","name":"metoffice-etl"}}}}}' \
-            https://app.terraform.io/api/v2/runs
+          task-definition: ecs-task-def.json
+          service: metoffice-etl-service
+          cluster: metoffice-ecs-cluster
+          wait-for-service-stability: true

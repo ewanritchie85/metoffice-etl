@@ -7,7 +7,10 @@ resource "aws_db_instance" "loading_db" {
   username               = var.loading_db_username
   password               = var.loading_db_password
   publicly_accessible    = true
+
   vpc_security_group_ids = [aws_security_group.db_sg.id]
+  skip_final_snapshot     = true
+  final_snapshot_identifier = "do-not-create"
 
 }
 

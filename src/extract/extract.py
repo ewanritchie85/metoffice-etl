@@ -25,7 +25,9 @@ def get_data_from_api(span: str, city: str) -> dict:
     return get_forecast_data(city, span)
 
 
-def upload_json_to_landing_s3( city: str, span: str="daily", bucket=None, s3_client=None) -> str:
+def upload_json_to_landing_s3(
+    city: str, span: str = "daily", bucket=None, s3_client=None
+) -> str:
     """Uploads forecast data JSON to landing S3 bucket.
 
     Args:
@@ -68,5 +70,13 @@ def upload_multiple_cities_json(cities: list) -> None:
 
 def lambda_handler(event, context):
     # Example cities; replace with dynamic input if needed
-    cities = ["London", "Tokyo", "New York", "Edinburgh", "Toronto", "Sydney", "Aberdeen"]
+    cities = [
+        "London",
+        "Tokyo",
+        "New York",
+        "Edinburgh",
+        "Toronto",
+        "Sydney",
+        "Aberdeen",
+    ]
     upload_multiple_cities_json(cities)
