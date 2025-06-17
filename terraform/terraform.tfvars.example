@@ -1,4 +1,5 @@
 aws_region = "your aws region"
+
 aws_profile = "your aws profile name"
 
 metoffice_api_key="Met office API key"
