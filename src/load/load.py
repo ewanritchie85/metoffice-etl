@@ -14,8 +14,8 @@ logger = setup_logger(__name__)
 # Insert transformed forecast data into RDS using pandas and sqlalchemy
 def insert_forecasts_to_db(dfs: List[pd.DataFrame]) -> None:
     engine = create_engine(
-        f"mysql+pymysql://{os.getenv('DB_USER_NAME')}:{os.getenv('DB_PASSWORD')}@"
-        f"{os.getenv('DB_ENDPOINT')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+        f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@"
+        f"{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
     )
     with engine.connect() as conn:
         result = conn.execute(text("SELECT City, forecast_time FROM weather_forecast"))
