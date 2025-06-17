@@ -18,11 +18,8 @@ def main() -> None:
     if os.getenv("TRIGGERED_BY") != "eventbridge":
         logger.info("Not triggered by EventBridge, skipping ETL")
         return
-    cities = [
-        "Aberdeen"
-    ]
-    # logger.info(f"ENV DB_HOST = {os.getenv('DB_HOST')}")
-    # logger.info(f"ENV METOFFICE_API_KEY = {os.getenv('METOFFICE_API_KEY')}")
+    cities = ["Aberdeen"]
+
     logger.info("Starting ETL pipeline")
 
     # Extract

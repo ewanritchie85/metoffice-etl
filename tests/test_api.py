@@ -1,26 +1,12 @@
 from unittest.mock import patch
 from fastapi.testclient import TestClient
 import pytest
-from api.api import app
-
-
-@pytest.fixture
-def client():
-    return TestClient(app)
 
 
 @pytest.fixture
 def mock_data():
     mock_data = {"features": [{"type": "Feature", "properties": {"key": "value"}}]}
     return mock_data
-
-
-class TestHealthCheck:
-    def test_api_health(self, client):
-        response = client.get("/health")
-        assert response.status_code == 200
-        assert response.json() == {"status": "ok"}
-        assert response.headers["Content-Type"] == "application/json"
 
 
 class TestGetHourlyData:

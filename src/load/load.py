@@ -5,10 +5,10 @@ from utils.utils import setup_logger
 import os
 from sqlalchemy import create_engine, text
 
-# this ensures .env not used when ECS runs python script
+logger = setup_logger(__name__)
+
 if os.getenv("RUNNING_IN_ECS") != "true":
     load_dotenv()
-logger = setup_logger(__name__)
 
 
 # Insert transformed forecast data into RDS using pandas and sqlalchemy

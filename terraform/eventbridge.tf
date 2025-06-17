@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_event_rule" "daily_trigger" {
   name                = "daily-metoffice-trigger"
-  description = "Scheduled triggering of ETL"
+  description         = "Scheduled triggering of ETL"
   schedule_expression = "rate(1 day)"
 }
 
@@ -24,7 +24,7 @@ resource "aws_cloudwatch_event_target" "ecs_target" {
       assign_public_ip = false
       security_groups  = [aws_security_group.ecs_service_sg.id]
     }
-    
+
 
   }
 }

@@ -1,5 +1,4 @@
 import json
-import dotenv
 import pandas as pd
 from utils.utils import (
     get_s3_client_and_landing_bucket,
@@ -9,7 +8,6 @@ from utils.utils import (
 
 logger = setup_logger(__name__)
 
-dotenv.load_dotenv()
 
 # S3 processed keys tracking
 PROCESSED_KEYS_PATH = "processed/processed_keys.txt"
