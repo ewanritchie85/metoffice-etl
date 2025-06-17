@@ -45,7 +45,7 @@ black: ## Install black: formats code to follow PEP 8.
 coverage: ## Install coverage: measures code coverage.
 	$(call execute_in_env, $(PIP) install coverage)
 
-dev-setup: bandit safety black coverage ## Install Bandit, Black Coverage and Safety
+dev-setup: bandit safety black coverage ## Install Bandit,  Black Coverage and Safety
 	$(call execute_in_env, $(PIP) install -r requirements.txt)
 
 # Build / Run
