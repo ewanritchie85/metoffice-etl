@@ -9,16 +9,17 @@ from utils.utils import setup_logger
 if os.getenv("RUNNING_IN_ECS") != "true":
     load_dotenv()
 
+
 logger = setup_logger(__name__)
 
 
-def main():
+def main() -> None:
+    # cost saving logic...
+    if os.getenv("TRIGGERED_BY") != "eventbridge":
+        logger.info("Not triggered by EventBridge, skipping ETL")
+        return
     cities = [
-        "London",
-        "Edinburgh",
-        "Toronto",
-        "Sydney",
-        "Aberdeen",
+        "Aberdeen"
     ]
     logger.info(f"ENV DB_HOST = {os.getenv('DB_HOST')}")
     logger.info(f"ENV METOFFICE_API_KEY = {os.getenv('METOFFICE_API_KEY')}")

@@ -21,6 +21,7 @@ resource "aws_ecs_task_definition" "etl_task" {
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_exec_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
+  
 
   container_definitions = jsonencode([
     {

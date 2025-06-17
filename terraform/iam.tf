@@ -100,3 +100,27 @@ resource "aws_iam_role_policy_attachment" "s3_access" {
   role       = aws_iam_role.ecs_task_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess" 
 }
+
+resource "aws_iam_policy" "ecs_ec2_interface_access" {
+  name = "ecs-ec2-interface-access"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DetachNetworkInterface",
+          "ec2:DeleteNetworkInterface"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_ec2_interface_access_attach" {
+  role       = aws_iam_role.ecs_exec_role.name
+  policy_arn = aws_iam_policy.ecs_ec2_interface_access.arn
+}
