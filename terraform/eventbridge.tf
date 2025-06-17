@@ -1,5 +1,6 @@
 resource "aws_cloudwatch_event_rule" "daily_trigger" {
   name                = "daily-metoffice-trigger"
+  description = "Scheduled triggering of ETL"
   schedule_expression = "rate(1 day)"
 }
 
@@ -9,14 +10,21 @@ resource "aws_cloudwatch_event_target" "ecs_target" {
   arn       = aws_ecs_cluster.ecs_cluster.arn
   role_arn  = aws_iam_role.ecs_events_role.arn
 
+
+
   ecs_target {
-    launch_type         = "FARGATE"
-    platform_version    = "LATEST"
-    task_definition_arn = aws_ecs_task_definition.etl_task.arn
+    launch_type             = "FARGATE"
+    platform_version        = "LATEST"
+    task_definition_arn     = aws_ecs_task_definition.etl_task.arn
+    task_count              = 1
+    enable_ecs_managed_tags = true
+
     network_configuration {
       subnets          = [aws_subnet.private_a.id, aws_subnet.private_b.id]
-      assign_public_ip = true
+      assign_public_ip = false
       security_groups  = [aws_security_group.ecs_service_sg.id]
     }
+    
+
   }
 }

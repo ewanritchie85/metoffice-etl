@@ -21,8 +21,8 @@ def main() -> None:
     cities = [
         "Aberdeen"
     ]
-    logger.info(f"ENV DB_HOST = {os.getenv('DB_HOST')}")
-    logger.info(f"ENV METOFFICE_API_KEY = {os.getenv('METOFFICE_API_KEY')}")
+    # logger.info(f"ENV DB_HOST = {os.getenv('DB_HOST')}")
+    # logger.info(f"ENV METOFFICE_API_KEY = {os.getenv('METOFFICE_API_KEY')}")
     logger.info("Starting ETL pipeline")
 
     # Extract
