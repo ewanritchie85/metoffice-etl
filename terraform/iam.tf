@@ -58,7 +58,6 @@ resource "aws_iam_role_policy" "ecs_run_task_policy" {
   name = "ecs-run-task-policy"
   role = aws_iam_role.ecs_events_role.id
 
-  # waits until the following are created 
   depends_on = [
     aws_ecs_task_definition.etl_task,
     aws_iam_role.ecs_exec_role
@@ -66,19 +65,36 @@ resource "aws_iam_role_policy" "ecs_run_task_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = [
-        "ecs:RunTask"
-      ]
-      Resource = aws_ecs_task_definition.etl_task.arn
-    }, {
-      Effect = "Allow"
-      Action = [
-        "iam:PassRole"
-      ]
-      Resource = aws_iam_role.ecs_exec_role.arn
-    }]
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecs:RunTask"
+        ]
+        Resource = [
+          aws_ecs_task_definition.etl_task.arn,
+          "${aws_ecs_task_definition.etl_task.arn}:*"
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecs:DescribeTasks",
+          "ecs:ListTasks"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "iam:PassRole"
+        ]
+        Resource = [
+          aws_iam_role.ecs_exec_role.arn,
+          aws_iam_role.ecs_task_role.arn
+        ]
+      }
+    ]
   })
 }
 
