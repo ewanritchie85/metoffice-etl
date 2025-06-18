@@ -62,6 +62,7 @@ def create_db_table() -> None:
     return
 
 
+
 def drop_db_table():
     conn = db_connection()
     logger.info("Clearing DB table")
