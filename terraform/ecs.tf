@@ -45,16 +45,20 @@ resource "aws_ecs_task_definition" "etl_task" {
           value = "${var.db_host}"
         },
         {
+          name  = "DB_HOST"
+          value = aws_db_instance.etl_db.address
+        },
+        {
           name  = "DB_PORT"
-          value = "${var.db_port}"
+          value = tostring(aws_db_instance.etl_db.port)
         },
         {
           name  = "DB_NAME"
-          value = "${var.loading_db_name}"
+          value = aws_db_instance.etl_db.db_name
         },
         {
           name  = "DB_USER"
-          value = "${var.loading_db_username}"
+          value = aws_db_instance.etl_db.username
         },
         {
           name  = "DB_PASSWORD"

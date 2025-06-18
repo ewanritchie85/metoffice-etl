@@ -11,6 +11,9 @@ if os.getenv("RUNNING_IN_ECS") != "true":
 
 
 def db_connection():
+    logger.info(
+        f"Attempting to connect to database at {os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}"
+    )
     try:
         conn = pymysql.connect(
             host=cast(str, os.getenv("DB_HOST")),
@@ -21,7 +24,7 @@ def db_connection():
         )
         return conn
     except pymysql.MySQLError as e:
-        logger.error(f"Failed to make connection to DB: {e}")
+        logger.error(f"Failed to make connection to DB: {str(e)}")
         raise
 
 
@@ -60,7 +63,6 @@ def create_db_table() -> None:
     logger.info("Table created successfully")
     conn.close()
     return
-
 
 
 def drop_db_table():
