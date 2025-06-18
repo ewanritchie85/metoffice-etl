@@ -5,9 +5,6 @@ terraform {
       version = "~> 5.0"
     }
   }
-    required_version = ">= 1.0"
-}
-terraform {
   backend "remote" {
     organization = "ewanritchie85-org"
 
@@ -15,6 +12,7 @@ terraform {
       name = "metoffice-etl"
     }
   }
+    required_version = ">= 1.0"
 }
 
 provider "aws" {

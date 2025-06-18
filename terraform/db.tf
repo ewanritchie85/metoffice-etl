@@ -20,25 +20,6 @@ resource "aws_db_instance" "loading_db" {
   ]
 }
 
-resource "aws_security_group" "db_sg" {
-  name        = "allow-mysql-from-my-ip"
-  description = "Allows access to RDS from local IP"
-  vpc_id      = aws_vpc.main.id
-
-  ingress {
-    description     = "Allow MySQL from ECS"
-    from_port       = 3306
-    to_port         = 3306
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ecs_service_sg.id]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
 resource "aws_db_subnet_group" "main" {
   name       = "metoffice-db-subnet-group"
   subnet_ids = [aws_subnet.private_a.id, aws_subnet.private_b.id]
