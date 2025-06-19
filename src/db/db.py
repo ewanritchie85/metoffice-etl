@@ -22,6 +22,7 @@ def db_connection():
             database=cast(str, os.getenv("DB_NAME")),
             port=int(os.getenv("DB_PORT", "3306")),
         )
+        logger.info("Connection to DB established successfully")
         return conn
     except pymysql.MySQLError as e:
         logger.error(f"Failed to make connection to DB: {str(e)}")
