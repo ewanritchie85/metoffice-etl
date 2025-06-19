@@ -12,6 +12,10 @@ resource "aws_iam_role" "ecs_exec_role" {
     }]
   })
 }
+resource "aws_iam_role_policy_attachment" "ecs_ssm" {
+  role       = aws_iam_role.ecs_exec_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
 
 resource "aws_iam_role_policy_attachment" "ecs_logs" {
   role       = aws_iam_role.ecs_exec_role.name
