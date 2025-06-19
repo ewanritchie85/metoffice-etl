@@ -1,89 +1,60 @@
 # Met Office ETL Infrastructure
 
-graph TD
-    %% Internet and VPC Gateway
-    Internet[Internet] --> IGW[Internet Gateway]
-    IGW --> PublicSubnet
+```mermaid
+graph LR
+    Internet[Met Office API]
+    IGW[Internet Gateway]
+    EventBridge[EventBridge<br/>Scheduler]
 
     subgraph VPC[VPC 10.0.0.0/16]
-        %% Public Networking
         subgraph PublicSubnet[Public Subnet 10.0.0.0/24]
             NAT[NAT Gateway]
             Bastion[Bastion Host]
         end
-
-        %% Private Networking
-        subgraph PrivateA[Private Subnet A 10.0.1.0/24]
-            ECS[ECS Tasks]
+        subgraph PrivateSubnet[Private Subnets]
+            ECS[ECS Task - ETL Script]
+            RDS[RDS Database]
         end
-
-        subgraph PrivateB[Private Subnet B 10.0.2.0/24]
-            RDS[RDS MySQL]
-        end
-
-        %% Database Layer
-        subgraph RDSLayer[RDS Instance]
-            DB[MySQL 8.0\nmetofficecleandb\nPort 3306]
-        end
-
-        %% AWS Services Integration
-        subgraph Endpoints[VPC Endpoints]
-            S3End[S3 Gateway Endpoint]
-            RDSEnd[RDS Interface Endpoint]
-        end
-
-        %% Security Layer
-        subgraph Security[Security Groups]
-            SG_RDS[RDS SG\nPort 3306]
-            SG_ECS[ECS SG]
-            SG_Bastion[Bastion SG]
-        end
+        S3Bucket[S3 Landing Bucket]
     end
 
-    %% Network Flow
+    LocalUser[Local User SQL Queries]
+
     Internet --> IGW
-    IGW --> PublicSubnet
-    PublicSubnet --> NAT
-    NAT --> PrivateA
-    NAT --> PrivateB
-    Bastion -->|SSH Tunnel| RDS
-    Bastion -->|SSH| LocalUser[Local User]
-    ECS -->|App Traffic| RDS
-    S3End --> PrivateA
-    S3End --> PrivateB
-    RDSEnd --> PrivateA
-    RDSEnd --> PrivateB
-
-    SG_RDS --> |Inbound Rules| DB
-    SG_ECS --> |Service Access| DB
-    SG_Bastion --> |SSH Access| RDS
-
-    %% Outbound API requests from ECS to Internet via NAT
+    IGW --> NAT
+    NAT --> ECS
+    ECS --> |Clean Data|RDS
+    ECS -->|Extracted Data| S3Bucket
     ECS -->|API Request| NAT
-    NAT -->|Outbound| Internet
+    NAT --> Internet
+    Bastion -->|SSH Tunnel| RDS
+    LocalUser -->|SSH| Bastion
+
+    EventBridge -->|Trigger| ECS
 
     %% Styling
-    classDef public fill:#ff9900,stroke:#fff,stroke-width:2px
+    classDef public fill:#560,stroke:#fff,stroke-width:2px
     classDef private fill:#007acc,stroke:#fff,stroke-width:2px
-    classDef security fill:#d64292,stroke:#fff,stroke-width:2px
-    
-    class PublicSubnet public
-    class PrivateA,PrivateB private
-    class SG_RDS,SG_ECS,SG_Bastion security
+    classDef s3 fill:#2e8b57,stroke:#fff,stroke-width:2px
+    classDef event fill:#6a5acd,stroke:#fff,stroke-width:2px
+
+    class NAT,Bastion public
+    class ECS,RDS private
+    class S3Bucket s3
+    class EventBridge event
+```
 
 ---
 
 **Legend:**
-- **PublicSubnet**: Contains NAT Gateway and Bastion Host (for SSH/DB access)
-- **PrivateA**: ECS tasks run here
-- **PrivateB**: RDS MySQL instance
-- **S3End/RDSEnd**: VPC endpoints for S3 and RDS
-- **Security Groups**: Control access between ECS, Bastion, and RDS
+- **S3Bucket**: S3 landing bucket for extracted data (green)
+- **PublicSubnet**: Contains NAT Gateway and Bastion Host (orange)
+- **PrivateA/PrivateB**: ECS tasks and RDS MySQL instance (blue)
+- **Security Groups**: ECS, Bastion, and RDS (pink)
 - **Bastion Host**: Used for secure SSH tunneling from your local machine to RDS
 - **ECS Outbound API**: ECS tasks send API requests to the internet via NAT Gateway
 
 ---
-
 
 ## Infrastructure Components
 
@@ -113,6 +84,10 @@ graph TD
 - **Name**: metofficecleandb
 - **Deployment**: Multi-AZ
 - **Network**: Private subnets
+
+### S3
+- **Landing Bucket**: Stores extracted weather data from Met Office API
+- **Access**: Via S3 Gateway Endpoint from private subnets
 
 ### VPC Endpoints
 - **S3**: Gateway endpoint
