@@ -93,3 +93,8 @@ variable "subnet_private_b_name" {
   description = "Name of the second private subnet"
   type        = string
 }
+
+variable "ssh_key_name" {
+  description = "Name of the SSH key pair for the bastion host"
+  type        = string
+}

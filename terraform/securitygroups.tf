@@ -31,7 +31,7 @@ resource "aws_security_group_rule" "rds_local_access" {
   protocol          = "tcp"
   cidr_blocks       = [var.my_ip_cidr] 
   security_group_id = aws_security_group.db_sg.id
-  description       = "Temporary local access fo dbeaver"
+  description       = "local access for dbeaver"
 }
 
 resource "aws_security_group_rule" "rds_egress" {
