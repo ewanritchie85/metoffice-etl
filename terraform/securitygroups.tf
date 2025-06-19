@@ -23,6 +23,7 @@ resource "aws_security_group_rule" "rds_from_ecs" {
   description              = "Allow MySQL from ECS"
 }
 
+
 resource "aws_security_group_rule" "rds_local_access" {
   type              = "ingress"
   from_port         = 3306
