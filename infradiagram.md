@@ -1,15 +1,14 @@
 # Met Office ETL Infrastructure
 
-```mermaid
 graph TD
     %% Internet and VPC Gateway
-    Internet[fa:fa-globe Internet] --> IGW[fa:fa-door-open Internet Gateway]
+    Internet[Internet] --> IGW[Internet Gateway]
     IGW --> PublicSubnet
 
-    subgraph VPC[fa:fa-cloud VPC 10.0.0.0/16]
+    subgraph VPC[VPC 10.0.0.0/16]
         %% Public Networking
         subgraph PublicSubnet[Public Subnet 10.0.0.0/24]
-            NAT[fa:fa-exchange-alt NAT Gateway]
+            NAT[NAT Gateway]
             Bastion[Bastion Host]
         end
 
@@ -23,21 +22,21 @@ graph TD
         end
 
         %% Database Layer
-        subgraph RDS[fa:fa-database RDS Instance]
-            DB[fa:fa-database MySQL 8.0<br/>metofficecleandb<br/>Port 3306]
+        subgraph RDSLayer[RDS Instance]
+            DB[MySQL 8.0\nmetofficecleandb\nPort 3306]
         end
 
         %% AWS Services Integration
         subgraph Endpoints[VPC Endpoints]
-            S3End[fa:fa-archive S3 Gateway]
-            RDSEnd[fa:fa-plug RDS Interface]
+            S3End[S3 Gateway Endpoint]
+            RDSEnd[RDS Interface Endpoint]
         end
 
         %% Security Layer
         subgraph Security[Security Groups]
-            SG_RDS[fa:fa-shield-alt RDS SG<br/>Port 3306]
-            SG_ECS[fa:fa-shield-alt ECS SG]
-            SG_Bastion[fa:fa-shield-alt Bastion SG]
+            SG_RDS[RDS SG\nPort 3306]
+            SG_ECS[ECS SG]
+            SG_Bastion[Bastion SG]
         end
     end
 
@@ -59,6 +58,10 @@ graph TD
     SG_ECS --> |Service Access| DB
     SG_Bastion --> |SSH Access| RDS
 
+    %% Outbound API requests from ECS to Internet via NAT
+    ECS -->|API Request| NAT
+    NAT -->|Outbound| Internet
+
     %% Styling
     classDef public fill:#ff9900,stroke:#fff,stroke-width:2px
     classDef private fill:#007acc,stroke:#fff,stroke-width:2px
@@ -67,7 +70,6 @@ graph TD
     class PublicSubnet public
     class PrivateA,PrivateB private
     class SG_RDS,SG_ECS,SG_Bastion security
-```
 
 ---
 
@@ -78,6 +80,7 @@ graph TD
 - **S3End/RDSEnd**: VPC endpoints for S3 and RDS
 - **Security Groups**: Control access between ECS, Bastion, and RDS
 - **Bastion Host**: Used for secure SSH tunneling from your local machine to RDS
+- **ECS Outbound API**: ECS tasks send API requests to the internet via NAT Gateway
 
 ---
 
@@ -97,12 +100,13 @@ graph TD
 ### Security Groups
 - **RDS Security Group**
   - Inbound: Port 3306 (MySQL)
-  - Source: ECS Security Group, Local IP
+  - Source: ECS Security Group, Bastion SG
 - **ECS Security Group**
-  - Outbound: All traffic
+  - Outbound: 443 (HTTPS), 3306 (MySQL)
 - **Bastion Security Group**
   - Inbound: Port 22 (SSH)
   - Source: Your IP
+  - Outbound: All traffic
 
 ### Database
 - **Engine**: MySQL 8.0
