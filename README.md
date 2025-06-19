@@ -1,7 +1,7 @@
 # Met Office ETL Project
 
 ## 📋 Overview
-Automated ETL pipeline that extracts weather forecast data from Met Office API, transforms it, and loads it into AWS RDS for analysis. The pipeline runs daily on AWS ECS Fargate, triggered by EventBridge.
+Automated ETL pipeline that extracts weather forecast data from the Met Office API, transforms it, and loads it into AWS RDS (MySQL) for analysis. The pipeline runs daily on AWS ECS Fargate, triggered by EventBridge.
 
 ## 🔧 Prerequisites
 
@@ -12,6 +12,7 @@ Automated ETL pipeline that extracts weather forecast data from Met Office API, 
 - AWS ECR repository
 - Python 3.11+
 - Make
+- (Optional) DBeaver or MySQL client for DB access
 
 ## 🚀 Getting Started
 
@@ -55,15 +56,18 @@ make clean  # Removes venv and cache files
 ### 1. Infrastructure (Terraform)
 - ECS Fargate cluster
 - S3 landing bucket
-- RDS PostgreSQL instance
+- RDS MySQL instance (not PostgreSQL)
 - EventBridge scheduler
 - CloudWatch logging
+- VPC with public/private subnets, NAT gateway, and security groups
+- Bastion host for secure DB access (optional, recommended for private RDS)
 
-### 2. Data Extraction (FastAPI)
+### 2. Data Extraction (Python)
 - Source: Met Office Global Spot Forecast API
 - Parameters:
   - `city`: Target location
   - `span`: `hourly`|`three-hourly`|`daily`
+- Data is uploaded to S3 as JSON
 
 ### 3. Data Storage
 ```
@@ -80,9 +84,14 @@ s3://<bucket-name>/<YYYY-MM-DD-HH:MM>/<city>.json
 - Output: Clean Pandas DataFrame
 
 ### 5. Data Loading
-- Target: AWS RDS PostgreSQL
+- Target: AWS RDS MySQL
 - Method: SQLAlchemy + pandas
 - Deduplication: Composite key (city, forecast_time)
+
+## 🛡️ Security & Access
+- RDS is deployed in private subnets by default
+- Bastion host (EC2) in public subnet for secure SSH tunneling to RDS
+- Security groups restrict access to only required ports and sources
 
 ## 📊 Monitoring
 
@@ -107,12 +116,18 @@ Common issues:
 1. **Task Failures**
    - Check CloudWatch logs
    - Verify API key in Terraform variables
-   - Test RDS connectivity
-
+   - Test RDS connectivity (use bastion host and SSH tunnel if RDS is private)
 2. **Data Issues**
    - Validate source JSON format
    - Check S3 permissions
    - Verify database constraints
+3. **DB Access**
+   - Use SSH tunnel via bastion host for secure access to private RDS
+   - Example SSH tunnel command:
+     ```bash
+     ssh -i ~/.ssh/your-keypair.pem -L 3306:<rds-endpoint>:3306 ubuntu@<bastion-public-ip>
+     ```
+   - Connect to `localhost:3306` in DBeaver or your MySQL client
 
 ## 👥 Contributing
 

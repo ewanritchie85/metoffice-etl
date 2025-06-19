@@ -18,7 +18,7 @@ def main() -> None:
     if os.getenv("TRIGGERED_BY") != "eventbridge":
         logger.info("Not triggered by EventBridge, skipping ETL")
         return
-    cities = ["Aberdeen"]
+    cities = ["Aberdeen", "Edinburgh", "Amsterdam", "Toronto"]
 
     logger.info("Starting ETL pipeline")
 
