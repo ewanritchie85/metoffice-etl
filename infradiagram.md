@@ -6,12 +6,12 @@ graph LR
     IGW[Internet Gateway]
     EventBridge[EventBridge<br/>Scheduler]
 
-    subgraph VPC[VPC 10.0.0.0/16]
-        subgraph PublicSubnet[Public Subnet 10.0.0.0/24]
+    subgraph VPC[VPC]
+        subgraph PublicSubnet[Public Subnet]
             NAT[NAT Gateway]
             Bastion[Bastion Host]
         end
-        subgraph PrivateSubnet[Private Subnets]
+        subgraph PrivateSubnet[Private Subnets A/B]
             ECS[ECS Task - ETL Script]
             RDS[RDS Database]
         end
@@ -24,13 +24,13 @@ graph LR
     IGW --> NAT
     NAT --> ECS
     ECS --> |Clean Data|RDS
-    ECS -->|Extracted Data| S3Bucket
+    ECS -->|Extracted Raw Data| S3Bucket
     ECS -->|API Request| NAT
     NAT --> Internet
     Bastion -->|SSH Tunnel| RDS
     LocalUser -->|SSH| Bastion
 
-    EventBridge -->|Trigger| ECS
+    EventBridge -->|Daily Trigger| ECS
 
     %% Styling
     classDef public fill:#560,stroke:#fff,stroke-width:2px
